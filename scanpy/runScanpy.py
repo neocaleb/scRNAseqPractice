@@ -14,7 +14,7 @@ sc.logging.print_header()
 sc.settings.set_figure_params(dpi=80, facecolor='white')
 
 adata = sc.read_10x_mtx(
-    '../data/pbmc3k/filtered_gene_bc_matrices/hg19/',  # the directory with the `.mtx` file
+    '../data/filtered_feature_bc_matrix/',  # the directory with the `.mtx` file
     var_names='gene_symbols',                # use gene symbols for the variable names (variables-axis index)
     cache=True)                              # write a cache file for faster subsequent reading
 
@@ -31,8 +31,8 @@ sc.pl.violin(adata, ['n_genes_by_counts', 'total_counts', 'pct_counts_mt'],
 sc.pl.scatter(adata, x='total_counts', y='pct_counts_mt')
 sc.pl.scatter(adata, x='total_counts', y='n_genes_by_counts')
 
-adata = adata[adata.obs.n_genes_by_counts < 2500, :]
-adata = adata[adata.obs.pct_counts_mt < 5, :]
+adata = adata[adata.obs.n_genes_by_counts < 5000, :]
+adata = adata[adata.obs.pct_counts_mt < 20, :]
 
 sc.pp.normalize_total(adata, target_sum=1e4)
 
@@ -52,7 +52,7 @@ sc.pl.pca(adata, color='CST3')
 sc.pp.neighbors(adata, n_neighbors=10, n_pcs=40)
 
 sc.tl.umap(adata)
-sc.pl.umap(adata, color=['CST3', 'NKG7', 'PPBP'])
+sc.pl.umap(adata, color=['FAM41C', 'NKG7', 'PPBP'], use_raw=False)
 
 sc.tl.leiden(adata)
 sc.pl.umap(adata, color=['leiden', 'CST3', 'NKG7'])

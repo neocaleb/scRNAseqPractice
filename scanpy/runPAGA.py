@@ -45,8 +45,8 @@ sc.pl.paga(adata, color=['louvain', 'Itga2b', 'Prss34', 'Cma1'])
 
 adata.obs['louvain'].cat.categories
 adata.obs['louvain_anno'] = adata.obs['louvain']
-adata.obs['louvain_anno'].cat.categories = ['0/Stem', '1', '2', '3', '4', '5', '6', '7', '8', '9/Ery', '10', '11', '12',
-       '13', '14', '15', '16', '17', '18/Baso', '19', '20/Neu', '21/Mk', '22/Mo', '23', '24']
+adata.obs['louvain_anno'].cat.categories = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10/Ery', '11', '12',
+       '13', '14', '15', '16/Stem', '17', '18', '19/Neu', '20/Mk', '21', '22/Baso', '23', '24/Mo']
 sc.tl.paga(adata, groups='louvain_anno')
 
 sc.pl.paga(adata, threshold=0.03)
@@ -56,7 +56,7 @@ sc.tl.draw_graph(adata, init_pos='paga')
 sc.pl.draw_graph(adata, color=['louvain_anno', 'Itga2b', 'Prss34', 'Cma1'], legend_loc='on data')
 
 #Reconstructing gene changes along PAGA paths (pseudotime)
-adata.uns['iroot'] = np.flatnonzero(adata.obs['louvain_anno']  == '0/Stem')[0]
+adata.uns['iroot'] = np.flatnonzero(adata.obs['louvain_anno']  == '16/Stem')[0]
 sc.tl.dpt(adata)
 gene_names = ['Gata2', 'Gata1', 'Klf1', 'Epor', 'Hba-a2',  # erythroid
               'Elane', 'Cebpe', 'Gfi1',                    # neutrophil
@@ -69,9 +69,9 @@ adata.raw = adata_raw
 
 sc.pl.draw_graph(adata, color=['louvain_anno', 'dpt_pseudotime'], legend_loc='on data')
 
-paths = [('erythrocytes', [0, 8, 7, 12, 10, 5, 9]),
-         ('neutrophils', [0, 3, 4, 11, 20]),
-         ('monocytes', [0, 3, 1, 13, 14, 22])]
+paths = [('erythrocytes', [16, 12, 7, 13, 18, 6, 5, 10]),
+         ('neutrophils', [16, 0, 4, 2, 14, 19]),
+         ('monocytes', [16, 0, 4, 11, 1, 9, 24])]
 adata.obs['distance'] = adata.obs['dpt_pseudotime']
 adata.obs['clusters'] = adata.obs['louvain_anno']  # just a cosmetic change
 adata.uns['clusters_colors'] = adata.uns['louvain_anno_colors']
